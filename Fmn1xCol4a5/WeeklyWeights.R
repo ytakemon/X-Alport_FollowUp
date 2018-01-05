@@ -5,13 +5,13 @@ library(lubridate)
 library(rlang)
 library(ggsci)
 options(tibble.width = Inf)
-wweights <- read_csv("~/Desktop/1706 and 1713 Col4a5xRfx3/Data/1713_weekly_weights.csv")
+wweights <- read_csv("~/Desktop/1717 and 1718 Col4a5xFmn1/Data/1718_weekly_weights.csv")
 
 # tidy dataframe
 wweights$DOB <- myd(wweights$DOB)
 wweights$Sex <- parse_factor(wweights$Sex, levels = unique(wweights$Sex))
 wweights$Col4a5_geno <- parse_factor(wweights$Col4a5_geno, levels = unique(wweights$Col4a5_geno))
-wweights$Rfx3_geno <- parse_factor(wweights$Rfx3_geno, levels = unique(wweights$Rfx3_geno))
+wweights$Fmn1_geno <- parse_factor(wweights$Fmn1_geno, levels = unique(wweights$Fmn1_geno))
 wweights$Cat <- parse_factor(wweights$Cat, levels = unique(wweights$Cat))
 
 # gather by weeks and prepare for plotting
@@ -23,7 +23,7 @@ ggdata <- wweights %>%
 plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat, shape = Cat)) +
               geom_point() +
               geom_line() +
-              labs( title = "1713 Col4a5xRfx3 Weekly Weights",
+              labs( title = "1718 Col4a5xFmn1 Weekly Weights",
                     subtitle = "15% drop indicator for euthanization",
                     y = "Weights (g)",
                     x = "Weeks",
@@ -31,7 +31,7 @@ plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat
                     shape = "Cohorts") +
               scale_color_aaas()
 
-pdf("~/Desktop/1706 and 1713 Col4a5xRfx3/Data/WeeklyWeights.pdf", width = 8, height = 6)
+pdf("~/Desktop/1706 and 1718 Col4a5xFmn1/Data/WeeklyWeights.pdf", width = 8, height = 6)
 print(plot)
 dev.off()
 
