@@ -31,7 +31,7 @@ plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat
                     shape = "Cohorts") +
               scale_color_aaas()
 
-pdf("~/Desktop/1706 and 1718 Col4a5xFmn1/Data/WeeklyWeights.pdf", width = 8, height = 6)
+pdf("~/Desktop/1717 and 1718 Col4a5xFmn1/Data/WeeklyWeights.pdf", width = 8, height = 6)
 print(plot)
 dev.off()
 
