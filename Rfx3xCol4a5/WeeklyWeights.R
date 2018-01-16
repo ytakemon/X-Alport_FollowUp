@@ -24,7 +24,8 @@ plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat
               geom_point() +
               geom_line() +
               labs( title = "1713 Col4a5xRfx3 Weekly Weights",
-                    subtitle = "15% drop indicator for euthanization",
+                    subtitle = paste("15% drop indicator for euthanization \n",
+                                     "Last Update: ", Sys.Date()),
                     y = "Weights (g)",
                     x = "Weeks",
                     colour = "Cohorts",
