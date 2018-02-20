@@ -15,9 +15,10 @@ wweights$Rfx3_geno <- parse_factor(wweights$Rfx3_geno, levels = unique(wweights$
 wweights$Cat <- parse_factor(wweights$Cat, levels = unique(wweights$Cat))
 
 # gather by weeks and prepare for plotting
-wks <- colnames(wweights)[10:ncol(wweights)]
+wks <- colnames(wweights)[grep("Wk", colnames(wweights))]
 ggdata <- wweights %>%
-              gather(wks, key = "Week", value = "Weight")
+          gather(wks, key = "Week", value = "Weight") %>%
+          filter(!is.na(Weight))
 
 #plot
 plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat, shape = Cat)) +
