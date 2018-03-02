@@ -25,7 +25,7 @@ count <- as.data.frame(table(wweights$Cat))
 plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat, shape = Cat)) +
               geom_point() +
               geom_line() +
-              labs( title = "1718 Col4a5xFmn1 Weekly Weights",
+              labs( title = "1713 Col4a5xRfx3 Weekly Weights",
                     subtitle = paste0("Cohort A Long: ", count[count$Var1 %in% "A_Long",]$Freq, " of 30", "\n",
                                      "Cohort B Long: ", count[count$Var1 %in% "B_Long",]$Freq, " of 30", "\n",
                                      "Cohort C Long: ", count[count$Var1 %in% "C_Long",]$Freq, " of 20", "\n",
