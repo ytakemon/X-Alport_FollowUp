@@ -8,7 +8,7 @@ options(tibble.width = Inf)
 wweights <- read_csv("~/Desktop/1706 and 1713 Col4a5xRfx3/Weights/Data/1713_weekly_weights.csv")
 
 # tidy dataframe
-wweights$DOB <- myd(wweights$DOB)
+wweights$DOB <- mdy(wweights$DOB)
 wweights$Sex <- parse_factor(wweights$Sex, levels = unique(wweights$Sex))
 wweights$Col4a5_geno <- parse_factor(wweights$Col4a5_geno, levels = unique(wweights$Col4a5_geno))
 wweights$Rfx3_geno <- parse_factor(wweights$Rfx3_geno, levels = unique(wweights$Rfx3_geno))
@@ -26,10 +26,10 @@ plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat
               geom_point() +
               geom_line() +
               labs( title = "1713 Col4a5xRfx3 Weekly Weights",
-                    subtitle = paste0("Cohort A Long: ", count[count$Var1 %in% "A_Long",]$Freq, " of 30", "\n",
-                                     "Cohort B Long: ", count[count$Var1 %in% "B_Long",]$Freq, " of 30", "\n",
-                                     "Cohort C Long: ", count[count$Var1 %in% "C_Long",]$Freq, " of 20", "\n",
-                                     "Cohort D Long: ", count[count$Var1 %in% "D_Long",]$Freq, " of 20", "\n",
+                    subtitle =paste0("Cohort A Long Female Col4a5-Het/Rfx3-WT: ", count[count$Var1 %in% "A_Long",]$Freq, " of 30", "\n",
+                                     "Cohort B Long Female Col4a5-Het/Rfx3-Het: ", count[count$Var1 %in% "B_Long",]$Freq, " of 30", "\n",
+                                     "Cohort C Long Male Col4a5-Mut/Rfx3-WT: ", count[count$Var1 %in% "C_Long",]$Freq, " of 20", "\n",
+                                     "Cohort D Long Male Col4a5-Mut/Rfx3-Het: ", count[count$Var1 %in% "D_Long",]$Freq, " of 20", "\n",
                             "Last Update: ", Sys.Date()),
                     y = "Weights (g)",
                     x = "Weeks",

@@ -5,13 +5,13 @@ library(lubridate)
 library(rlang)
 library(ggsci)
 options(tibble.width = Inf)
-wweights <- read_csv("~/Dropbox/1714 Col4a5xFmn1/Data/1718_weekly_weights.csv")
+wweights <- read_csv("~/Desktop/1707 and 1714Col4a5xRictor/Weights/Data/1714_weekly_weights.csv")
 
 # tidy dataframe
-wweights$DOB <- myd(wweights$DOB)
+wweights$DOB <- mdy(wweights$DOB)
 wweights$Sex <- parse_factor(wweights$Sex, levels = unique(wweights$Sex))
 wweights$Col4a5_geno <- parse_factor(wweights$Col4a5_geno, levels = unique(wweights$Col4a5_geno))
-wweights$Fmn1_geno <- parse_factor(wweights$Fmn1_geno, levels = unique(wweights$Fmn1_geno))
+wweights$Rictor_geno <- parse_factor(wweights$Rictor_geno, levels = unique(wweights$Rictor_geno))
 wweights$Cat <- parse_factor(wweights$Cat, levels = c("A_Long", "B_Long", "C_Long", "D_Long"))
 
 # gather by weeks and prepare for plotting
@@ -25,11 +25,11 @@ count <- as.data.frame(table(wweights$Cat))
 plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat, shape = Cat)) +
               geom_point() +
               geom_line() +
-              labs( title = "1718 Col4a5xFmn1 Weekly Weights",
-                    subtitle = paste0("Cohort A Long: ", count[count$Var1 %in% "A_Long",]$Freq, " of 30", "\n",
-                                     "Cohort B Long: ", count[count$Var1 %in% "B_Long",]$Freq, " of 30", "\n",
-                                     "Cohort C Long: ", count[count$Var1 %in% "C_Long",]$Freq, " of 20", "\n",
-                                     "Cohort D Long: ", count[count$Var1 %in% "D_Long",]$Freq, " of 20", "\n",
+              labs( title = "1714 Col4a5xRictor Weekly Weights",
+                    subtitle = paste0("Cohort A Long Female Col4a5-Het/Rictor-WT: ", count[count$Var1 %in% "A_Long",]$Freq, " of 30", "\n",
+                                     "Cohort B Long Female Col4a5-Het/Rictor-Het: ", count[count$Var1 %in% "B_Long",]$Freq, " of 30", "\n",
+                                     "Cohort C Long Male Col4a5-Mut/Rictor-WT: ", count[count$Var1 %in% "C_Long",]$Freq, " of 20", "\n",
+                                     "Cohort D Long Male Col4a5-Mut/Rictor-Het: ", count[count$Var1 %in% "D_Long",]$Freq, " of 20", "\n",
                             "Last Update: ", Sys.Date()),
                     y = "Weights (g)",
                     x = "Weeks",
@@ -37,7 +37,7 @@ plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat
                     shape = "Cohorts") +
               scale_color_aaas()
 
-pdf("~/Dropbox/1714 Col4a5xFmn1/Data/WeeklyWeights.pdf", width = 12, height = 8)
+pdf("~/Desktop/1707 and 1714Col4a5xRictor/Weights/Data/WeeklyWeights.pdf", width = 12, height = 8)
 print(plot)
 dev.off()
 
