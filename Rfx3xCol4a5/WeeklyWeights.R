@@ -23,7 +23,7 @@ ggdata <- wweights %>%
 #plot
 count <- as.data.frame(table(wweights$Cat))
 plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat, shape = Cat)) +
-              geom_point() +
+              geom_point(size= 2) +
               geom_line() +
               labs( title = "1713 Col4a5xRfx3 Weekly Weights",
                     subtitle =paste0("Cohort A Long Female Col4a5-Het/Rfx3-WT: ", count[count$Var1 %in% "A_Long",]$Freq, " of 30", "\n",
