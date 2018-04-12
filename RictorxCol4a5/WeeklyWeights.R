@@ -5,7 +5,11 @@ library(lubridate)
 library(rlang)
 library(ggsci)
 options(tibble.width = Inf)
-wweights <- read_csv("~/Desktop/1707 and 1714Col4a5xRictor/Weights/Data/1714_weekly_weights.csv")
+infile <- "~/Desktop/1707 and 1714Col4a5xRictor/Weights/Data/1714_weekly_weights.csv"
+outfile <- "~/Desktop/1707 and 1714Col4a5xRictor/Weights/Data/WeeklyWeights.pdf"
+
+# read file 
+wweights <- read_csv(infile)
 
 # tidy dataframe
 wweights$DOB <- mdy(wweights$DOB)
@@ -37,7 +41,7 @@ plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat
                     shape = "Cohorts") +
               scale_color_aaas()
 
-pdf("~/Desktop/1707 and 1714Col4a5xRictor/Weights/Data/WeeklyWeights.pdf", width = 12, height = 8)
+pdf(outfile, width = 12, height = 8)
 print(plot)
 dev.off()
 
