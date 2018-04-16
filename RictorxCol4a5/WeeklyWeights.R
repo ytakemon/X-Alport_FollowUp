@@ -8,7 +8,7 @@ options(tibble.width = Inf)
 infile <- "~/Desktop/1707 and 1714Col4a5xRictor/Weights/Data/1714_weekly_weights.csv"
 outfile <- "~/Desktop/1707 and 1714Col4a5xRictor/Weights/Data/WeeklyWeights.pdf"
 
-# read file 
+# read file
 wweights <- read_csv(infile)
 
 # tidy dataframe
@@ -66,7 +66,7 @@ for (i in 1:nrow(wweights)){
 # Print message to indicate animal health
 if(any(wweights$drop15, na.rm = TRUE)){
   print("Following animals have dropped their weight by 15%!")
-  wweights[wweights$drop15 == TRUE,]
+  print(wweights[wweights$drop15 %in% TRUE,]$Animal_ID)
 } else if (!any(wweights$drop15, na.rm = TRUE)){
   print("Keep going, all animals have maintained a healthy weight")
 } else {
