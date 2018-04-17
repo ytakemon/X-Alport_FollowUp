@@ -1,18 +1,19 @@
 # R/3.4.3 kite-eating tree
 library(ggplot2)
 library(tidyverse)
+library(readxl)
 library(lubridate)
 library(rlang)
 library(ggsci)
 options(tibble.width = Inf)
-infile <- "~/Desktop/1707 and 1714Col4a5xRictor/Weights/Data/1714_weekly_weights.csv"
-outfile <- "~/Desktop/1707 and 1714Col4a5xRictor/Weights/Data/WeeklyWeights.pdf"
+infile <- "~/Desktop/Col4a5_FollowupStudies/1707 and 1714 Col4a5xRictor/Weights/1714 Col4a5xRictor experimental cohort and schedule.xlsx"
+outfile <- "~/Desktop/Col4a5_FollowupStudies/1707 and 1714 Col4a5xRictor/Weights/WeeklyWeights.pdf"
 
 # read file
-wweights <- read_csv(infile)
+wweights <- read_excel(infile, sheet = "1714_weekly_weights")
 
 # tidy dataframe
-wweights$DOB <- mdy(wweights$DOB)
+wweights$DOB <- ymd(wweights$DOB)
 wweights$Sex <- parse_factor(wweights$Sex, levels = unique(wweights$Sex))
 wweights$Col4a5_geno <- parse_factor(wweights$Col4a5_geno, levels = unique(wweights$Col4a5_geno))
 wweights$Rictor_geno <- parse_factor(wweights$Rictor_geno, levels = unique(wweights$Rictor_geno))
