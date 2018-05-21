@@ -1,4 +1,4 @@
-# R/3.4.3 kite-eating tree
+# R/3.5.0 Joy in Playing
 library(ggplot2)
 library(tidyverse)
 library(readxl)
@@ -10,7 +10,6 @@ infile <- "~/Desktop/Col4a5_FollowupStudies/1717 and 1718 Col4a5xFmn1/Weights/17
 outfile <- "~/Desktop/Col4a5_FollowupStudies/1717 and 1718 Col4a5xFmn1/Weights/WeeklyWeights.pdf"
 
 # read file
-
 wweights <- read_excel(infile, sheet = "1718_weekly_weights")
 
 # tidy dataframe
@@ -19,12 +18,16 @@ wweights$StartDate <- ymd(wweights$StartDate)
 wweights$Sex <- parse_factor(wweights$Sex, levels = unique(wweights$Sex))
 wweights$Col4a5_geno <- parse_factor(wweights$Col4a5_geno, levels = unique(wweights$Col4a5_geno))
 wweights$Fmn1_geno <- parse_factor(wweights$Fmn1_geno, levels = unique(wweights$Fmn1_geno))
-wweights$Cat <- parse_factor(wweights$Cat, levels = c("A_Long", "B_Long", "C_Long", "D_Long"))
+wweights$Cat <- parse_factor(wweights$Cat, levels = c("A_Long", "B_Long", "C_Long", "D_Long","NA_Long")) # adding NA as temp place holder while genotyping is being sorted out
+
+# Identify outliers and drop from plot and calculations
+# Not outliers yet
 
 # gather by weeks and prepare for plotting
 wks <- colnames(wweights)[grep("Wk", colnames(wweights))]
 ggdata <- wweights %>%
           gather(wks, key = "Week", value = "Weight") %>%
+          mutate(Weight=as.numeric(replace(Weight,Weight=="NA", NA))) %>%
           filter(!is.na(Weight))
 
 #plot
@@ -42,29 +45,37 @@ plot <- ggplot(ggdata, aes(x = Week, y = Weight, group = Animal_ID, colour = Cat
                     x = "Weeks",
                     colour = "Cohorts",
                     shape = "Cohorts") +
+              theme(text = element_text(size = 20),
+                    axis.text.x = element_text(angle =45,hjust=1))+
               scale_color_aaas()
 
 pdf(outfile, width = 12, height = 8)
-print(plot)
+plot
 dev.off()
 
 # Check if any animals droped their weight by 15%
 wweights$drop15 <- NA
 for (i in 1:nrow(wweights)){
-  if(is.na(which(is.na(wweights[i, wks]))[1])){
-    last <- ncol(wweights[i, wks])
-    last <- wweights[i, wks][last]
-    max <- max(wweights[i, wks], na.rm = TRUE)
+  row <- wweights[i, wks]
+  row[which(row == "NA")] <- NA
+  row <- apply(row,2,as.numeric)
+  if(is.na(which(is.na(row))[1])){
+    last <- length(row)
+    last <- row[last]
+    max <- max(row, na.rm = TRUE)
     wweights$drop15[i] <- (last / max) < 0.85
-  } else if(which(is.na(wweights[i, wks]))[1] - 1 == 0){
+  } else if(which(is.na(row))[1] - 1 == 0){
     wweights$drop15[i] <- NA
   } else {
-    last <- which(is.na(wweights[i, wks]))[1] - 1
-    last <- wweights[i, wks][last]
-    max <- max(wweights[i, wks], na.rm = TRUE)
+    last <- which(is.na(row))[1] - 1
+    last <- row[last]
+    max <- max(row, na.rm = TRUE)
     wweights$drop15[i] <- (last / max) < 0.85
   }
 }
+
+# Account for already euthanized animals
+wweights <- mutate(wweights, drop15 = replace(drop15, Euth == TRUE, TRUE))
 
 # Print message to indicate animal health
 if(any(wweights$drop15, na.rm = TRUE)){
