@@ -58,20 +58,18 @@ wweights$drop15 <- NA
 for (i in 1:nrow(wweights)){
   row <- wweights[i, wks]
   row[which(row == "NA")] <- NA
-  row <- apply(row,2,as.numeric)
-  if(is.na(which(is.na(row))[1])){
-    last <- length(row)
-    last <- row[last]
-    max <- max(row, na.rm = TRUE)
-    wweights$drop15[i] <- (last / max) < 0.85
-  } else if(which(is.na(row))[1] - 1 == 0){
-    wweights$drop15[i] <- NA
-  } else {
-    last <- which(is.na(row))[1] - 1
-    last <- row[last]
-    max <- max(row, na.rm = TRUE)
-    wweights$drop15[i] <- (last / max) < 0.85
+
+  # if animal hasn't bee phenotyped yet (no week 6 data)
+  if(is.na(row)[1]){
+    wweights$drop15[i] <- FALSE
+    next
   }
+
+  # otherwise try to calculate weight drop
+  row <- as.numeric(row[!is.na(row)[1,]])
+  last <-row[length(row)]
+  max <- max(row, na.rm = TRUE)
+  wweights$drop15[i] <- (last / max) < 0.85
 }
 
 # Account for already euthanized animals
