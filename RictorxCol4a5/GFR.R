@@ -6,7 +6,7 @@ library(rlang)
 library(ggsci)
 options(tibble.width = Inf)
 indir <- "~/Desktop/Col4a5_FollowupStudies/FollowupStudies_GFR/cleaned_data"
-outfile <- "~/Desktop/Col4a5_FollowupStudies/FollowupStudies_GFR/cleaned_data/1713_GFRplot.R"
+outfile <- "~/Desktop/Col4a5_FollowupStudies/FollowupStudies_GFR/cleaned_data/1714_GFRplot.R"
 
 # Get all files and gather them into one
 files <- list.files(path = indir, pattern = "xlsx", full.names = TRUE)
@@ -22,7 +22,7 @@ for(i in 1:length(files)){
                    CI_min = "CI Min",
                    CI_max = "CI Max",
                    CI_diff = "CI Difference") %>%
-            filter(Name != is.na(Name) & Line == "1713") %>%
+            filter(Name != is.na(Name) & Line == "1714") %>%
             arrange(Name)
 
   # Add to the rest of the dataset
@@ -32,12 +32,12 @@ for(i in 1:length(files)){
 # Box plot and anova
 plot <- ggplot(data_all, aes(x= Cohort, y= GFR, fill = Cohort))+
   geom_boxplot() +
-  labs( title = "1713 Col4a5xRfx3 GFR",
+  labs( title = "1714 Col4a5xRictor GFR",
         subtitle = paste0("Last Update: ", Sys.Date(), "\n",
-                  "Cohort A Long Female Col4a5-Het/Rfx3-WT: ", table(data_all$Cohort)[[1]], " of 30", "\n",
-                  "Cohort B Long Female Col4a5-Het/Rfx3-Het: ", table(data_all$Cohort)[[2]], " of 30", "\n",
-                  "Cohort C Long Male Col4a5-Mut/Rfx3-WT: ", table(data_all$Cohort)[[3]], " of 20", "\n",
-                  "Cohort D Long Male Col4a5-Mut/Rfx3-Het: ", table(data_all$Cohort)[[4]], " of 20", "\n"))+
+                  "Cohort A Long Female Col4a5-Het/Rictor-WT: ", table(data_all$Cohort)[["A_Long"]], " of 30", "\n",
+                  "Cohort B Long Female Col4a5-Het/Rictor-Het: ", table(data_all$Cohort)[["B_Long"]], " of 30", "\n",
+                  #"Cohort C Long Male Col4a5-Mut/Rictor-WT: ", table(data_all$Cohort)[["C_Long"]], " of 20", "\n",
+                  "Cohort D Long Male Col4a5-Mut/Rictor-Het: ", table(data_all$Cohort)[["D_Long"]], " of 20", "\n"))+
   theme(text = element_text(size = 15))+
   scale_fill_aaas()
 
