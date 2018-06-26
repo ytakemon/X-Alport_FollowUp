@@ -35,7 +35,7 @@ for (i in 1:nrow(outliers)){
 wks <- colnames(wweights)[grep("Wk", colnames(wweights))]
 ggdata <- wweights %>%
           gather(wks, key = "Week", value = "Weight") %>%
-          mutate(Weight=as.numeric(replace(Weight,Weight=="NA", NA))) %>%
+          mutate(Weight=suppressWarnings(as.numeric(replace(Weight,Weight=="NA", NA)))) %>%
           filter(!is.na(Weight))
 
 #plot
@@ -74,7 +74,7 @@ for (i in 1:nrow(wweights)){
   }
 
   # otherwise try to calculate weight drop
-  row <- as.numeric(row[!is.na(row)[1,]])
+  row <- suppressWarnings(as.numeric(row[!is.na(row)[1,]]))
   last <-row[length(row)]
   max <- max(row, na.rm = TRUE)
   wweights$drop15[i] <- (last / max) < 0.85

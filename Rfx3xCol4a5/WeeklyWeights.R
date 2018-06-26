@@ -27,8 +27,13 @@ wweights$Cat <- parse_factor(wweights$Cat, levels = c("A_Long", "B_Long", "C_Lon
 wks <- colnames(wweights)[grep("Wk", colnames(wweights))]
 ggdata <- wweights %>%
           gather(wks, key = "Week", value = "Weight") %>%
-          mutate(Weight=as.numeric(replace(Weight,Weight=="NA", NA))) %>%
+          mutate(Weight=suppressWarnings(as.numeric(replace(Weight,Weight=="NA", NA)))) %>%
           filter(!is.na(Weight))
+
+# This will generate a warning, which should be fixed
+#Warning message:
+#In evalq(as.numeric(replace(Weight, Weight == "NA", NA)), <environment>) :
+#  NAs introduced by coercion
 
 #plot
 count <- as.data.frame(table(wweights$Cat))
