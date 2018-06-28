@@ -87,6 +87,7 @@ wweights <- mutate(wweights, drop15 = replace(drop15, Euth == TRUE, TRUE))
 if(any(wweights$drop15, na.rm = TRUE)){
   print("Following animals have dropped their weight by 15%!")
   print(wweights[wweights$drop15 %in% TRUE,]$Animal_ID)
+  print(paste("Total of ",length(wweights[wweights$drop15 %in% TRUE,]$Animal_ID), "mice. Please confirm with spread sheet."))
 } else if (!any(wweights$drop15, na.rm = TRUE)){
   print("Keep going, all animals have maintained a healthy weight")
 } else {
