@@ -44,3 +44,9 @@ plot <- ggplot(data_all, aes(x= Cohort, y= GFR, fill = Cohort))+
 pdf(outfile, width = 12, height = 8)
 plot
 dev.off()
+
+# ANOVA
+data_all$Cohort <- as.factor(data_all$Cohort)
+anov <- aov(GFR ~ Cohort, data = data_all)
+print("ANOVA test: ")
+print(summary(anov))
