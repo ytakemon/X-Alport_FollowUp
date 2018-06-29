@@ -6,7 +6,7 @@ library(rlang)
 library(ggsci)
 options(tibble.width = Inf)
 indir <- "~/Desktop/Col4a5_FollowupStudies/FollowupStudies_GFR/cleaned_data"
-outfile <- "~/Desktop/Col4a5_FollowupStudies/FollowupStudies_GFR/cleaned_data/1714_GFRplot.R"
+outfile <- "~/Desktop/Col4a5_FollowupStudies/FollowupStudies_GFR/cleaned_data/1714_GFRplot.pdf"
 
 # Get all files and gather them into one
 files <- list.files(path = indir, pattern = "xlsx", full.names = TRUE)
