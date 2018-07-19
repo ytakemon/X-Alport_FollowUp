@@ -36,7 +36,7 @@ plot <- ggplot(data_all, aes(x= Cohort, y= GFR, fill = Cohort))+
         subtitle = paste0("Last Update: ", Sys.Date(), "\n",
                   "Cohort A Long Female Col4a5-Het/Rictor-WT: ", table(data_all$Cohort)[["A_Long"]], " of 30", "\n",
                   "Cohort B Long Female Col4a5-Het/Rictor-Het: ", table(data_all$Cohort)[["B_Long"]], " of 30", "\n",
-                  #"Cohort C Long Male Col4a5-Mut/Rictor-WT: ", table(data_all$Cohort)[["C_Long"]], " of 20", "\n",
+                  "Cohort C Long Male Col4a5-Mut/Rictor-WT: ", table(data_all$Cohort)[["C_Long"]], " of 20", "\n",
                   "Cohort D Long Male Col4a5-Mut/Rictor-Het: ", table(data_all$Cohort)[["D_Long"]], " of 20", "\n"))+
   theme(text = element_text(size = 15))+
   scale_fill_aaas()
@@ -48,5 +48,11 @@ dev.off()
 # ANOVA
 data_all$Cohort <- as.factor(data_all$Cohort)
 anov <- aov(GFR ~ Cohort, data = data_all)
-print("ANOVA test: ")
+print("ANOVA test ALL groups: ")
+print(summary(anov))
+anov <- aov(GFR ~ Cohort, data = data_all[data_all$Sex == "M",])
+print("ANOVA test males: ")
+print(summary(anov))
+anov <- aov(GFR ~ Cohort, data = data_all[data_all$Sex == "F",])
+print("ANOVA test females: ")
 print(summary(anov))
