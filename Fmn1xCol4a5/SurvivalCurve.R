@@ -34,22 +34,31 @@ if(any(surv$TodayWeeks < 0)){
 for (i in 1:nrow(surv)){
   wk <- surv$EndWeeks[i] # grab week of death
   ID <- surv$Animal_ID[i] # grab animal ID
-
+  # skip if animal is still alive
   if (is.na(wk)){
-    next # skip if animal is still alive?
+    next
   }
-
   # If end date is present change TodayWeeks and assign life stat
   surv[surv$Animal_ID == ID & surv$EndWeeks == wk,]$TodayWeeks <- wk
   surv[surv$Animal_ID == ID & surv$EndWeeks == wk,]$LifeStat <- 1
 }
 
 # Fit model
-fit <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv)
+fit <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv) # all
+fit_M <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv[surv$Sex == "M",]) # males only
+fit_F <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv[surv$Sex == "F",]) # females only
+
 # Visualize
 plot <- ggsurvplot(fit,
   data = surv,
+  # Change legends: title & labels
+  legend.title = "Genetype",
+  legend.labs = c("Female:Col4a5–Fmn1^{WT}", "Female:Col4a5–Fmn1KO","Male:Col4a5–Fmn1WT", "Male:Col4a5–Fmn1KO"),
+  # Add medians survival
+  surv.median.line = "hv",
+  # Add risk table
   risk.table = TRUE,
+  tables.theme = theme_cleantable(),
   color = "strata",
   palette = pal_aaas("default")(5),
   pval = TRUE,
@@ -60,7 +69,55 @@ plot <- ggsurvplot(fit,
   font.title = 10,
   font.subtitle = 10,
   fontsize = 4,
-  legend = "none")
+  ggtheme = theme_bw())
+
+# Visualize
+plotM <- ggsurvplot(fit_M,
+  data = surv,
+  # Change legends: title & labels
+  legend.title = "Genetype",
+  legend.labs = c("Col4a5–Fmn1WT", "Col4a5–Fmn1KO"),
+  # Add medians survival
+  surv.median.line = "hv",
+  # Add risk table
+  risk.table = TRUE,
+  tables.theme = theme_cleantable(),
+  color = "strata",
+  palette = pal_aaas("default")(5),
+  pval = TRUE,
+  xlim = c(0:max(surv$TodayWeeks)),
+  break.time.by = 2,
+  title = "1718 Survival Curve (Males)",
+  subtitle = paste("Last Update:", Sys.Date(), "Oldest mouse is", max(surv$TodayWeeks), "wks old"),
+  font.title = 10,
+  font.subtitle = 10,
+  fontsize = 4,
+  ggtheme = theme_bw())
+
+plotF <- ggsurvplot(fit_F,
+  data = surv,
+  # Change legends: title & labels
+  legend.title = "Genetype",
+  legend.labs = c("Col4a5–Fmn1WT", "Col4a5–Fmn1KO"),
+  # Add medians survival
+  surv.median.line = "hv",
+  # Add risk table
+  risk.table = TRUE,
+  tables.theme = theme_cleantable(),
+  color = "strata",
+  palette = pal_aaas("default")(5),
+  pval = TRUE,
+  xlim = c(0:max(surv$TodayWeeks)),
+  break.time.by = 2,
+  title = "1718 Survival Curve (Females)",
+  subtitle = paste("Last Update:", Sys.Date(), "Oldest mouse is", max(surv$TodayWeeks), "wks old"),
+  font.title = 10,
+  font.subtitle = 10,
+  fontsize = 4,
+  ggtheme = theme_bw())
+
+
+
 
 pdf(outfile, width = 8, height = 8, onefile = FALSE) #force into single page to get ride of first blank page
 plot
