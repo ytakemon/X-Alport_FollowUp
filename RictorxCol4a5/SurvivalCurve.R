@@ -8,8 +8,8 @@ library(survminer)
 library(survival)
 library(ggsci)
 options(tibble.width = Inf)
-infile <- "~/Desktop/Col4a5_FollowupStudies/1707 and 1714 Col4a5xRictor/Weights/1714 Col4a5xRictor experimental cohort and schedule.xlsx"
-outfile <- "~/Desktop/Col4a5_FollowupStudies/1707 and 1714 Col4a5xRictor/Weights/SurvivalCurve_1714.pdf"
+infile <- "~/Dropbox/Col4a5_FollowupStudies/1707 and 1714 Col4a5xRictor/Weights/1714 Col4a5xRictor experimental cohort and schedule.xlsx"
+outfile <- "~/Dropbox/Col4a5_FollowupStudies/1707 and 1714 Col4a5xRictor/Weights/SurvivalCurve_1714.pdf"
 
 # read data and extract relevant columns
 surv <- read_excel(infile, sheet = "Euthanized_date")
