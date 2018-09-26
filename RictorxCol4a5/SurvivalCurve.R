@@ -45,23 +45,59 @@ for (i in 1:nrow(surv)){
 }
 
 # Fit model
-fit <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv)
+#fit <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv) # all
+fit_M <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv[surv$Sex == "M",]) # males only
+fit_F <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv[surv$Sex == "F",]) # females only
+
 # Visualize
-plot <- ggsurvplot(fit,
-  data = surv,
+plotM <- surv %>% filter(Sex == "M") %>% ggsurvplot(fit_M,
+  data = .,
+  # Change legends: title & labels
+  legend.title = "Genetype",
+  legend.labs = c("Col4a5–RictorWT", "Col4a5–RictorKO"),
+  # Add medians survival
+  surv.median.line = "hv",
+  # Add risk table
   risk.table = TRUE,
+  tables.theme = theme_cleantable(),
   color = "strata",
   palette = pal_aaas("default")(5),
   pval = TRUE,
-  xlim = c(0:max(surv$TodayWeeks)),
+  xlim = c(0:max(.$TodayWeeks)),
   break.time.by = 2,
-  title = "1718 Survival Curve",
-  subtitle = paste("Last Update:", Sys.Date(), "Oldest mouse is", max(surv$TodayWeeks), "wks old"),
+  title = "1714 Survival Curve (Males)",
+  subtitle = paste("Last Update:", Sys.Date(), "Oldest mouse is", max(.$TodayWeeks), "wks old"),
   font.title = 10,
   font.subtitle = 10,
   fontsize = 4,
-  legend = "none")
+  ggtheme = theme_bw())
 
-pdf(outfile, width = 8, height = 8, onefile = FALSE) #force into single page to get ride of first blank page
-plot
+plotF <- surv %>% filter(Sex == "F") %>% ggsurvplot(fit_F,
+  data = .,
+  # Change legends: title & labels
+  legend.title = "Genetype",
+  legend.labs = c("Col4a5–RictorWT", "Col4a5–RictorKO"),
+  # Add medians survival
+  surv.median.line = "hv",
+  # Add risk table
+  risk.table = TRUE,
+  tables.theme = theme_cleantable(),
+  color = "strata",
+  palette = pal_aaas("default")(5),
+  pval = TRUE,
+  xlim = c(0:max(.$TodayWeeks)),
+  break.time.by = 2,
+  title = "1714 Survival Curve (Females)",
+  subtitle = paste("Last Update:", Sys.Date(), "Oldest mouse is", max(.$TodayWeeks), "wks old"),
+  font.title = 10,
+  font.subtitle = 10,
+  fontsize = 4,
+  ggtheme = theme_bw())
+
+pdf(paste0(outfile,"_male.pdf"), width = 8, height = 8, onefile = FALSE) #force into single page to get ride of first blank page
+plotM
+dev.off()
+
+pdf(paste0(outfile, "_female.pdf"), width = 8, height = 8, onefile = FALSE) #force into single page to get ride of first blank page
+plotF
 dev.off()
