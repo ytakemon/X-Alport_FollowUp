@@ -6,8 +6,10 @@ library(lubridate)
 library(rlang)
 library(ggsci)
 options(tibble.width = Inf)
-infile <- "~/Desktop/Col4a5_FollowupStudies/1706 and 1713 Col4a5xRfx3/Weights/1713 Col4a5xRfx3 experimental cohort and schedule.xlsx"
-outfile <- "~/Desktop/Col4a5_FollowupStudies/1706 and 1713 Col4a5xRfx3/Weights/WeeklyWeights.pdf"
+#infile <- "~/Desktop/Col4a5_FollowupStudies/1706 and 1713 Col4a5xRfx3/Weights/1713 Col4a5xRfx3 experimental cohort and schedule.xlsx"
+#outfile <- "~/Desktop/Col4a5_FollowupStudies/1706 and 1713 Col4a5xRfx3/Weights/WeeklyWeights.pdf"
+infile <- "~/Desktop/1713 Col4a5xRfx3 experimental cohort and schedule.xlsx"
+outfile <- "~/Desktop/WeeklyWeights.pdf"
 
 # read file
 wweights <- read_excel(infile, sheet = "1713_weekly_weights")
