@@ -6,10 +6,10 @@ library(lubridate)
 library(rlang)
 library(ggsci)
 options(tibble.width = Inf)
-#infile <- "~/Desktop/Col4a5_FollowupStudies/1707 and 1714 Col4a5xRictor/Weights/1714 Col4a5xRictor experimental cohort and schedule.xlsx"
-#outfile <- "~/Desktop/Col4a5_FollowupStudies/1707 and 1714 Col4a5xRictor/Weights/WeeklyWeights.pdf"
-infile <- "~/Desktop/1714 Col4a5xRictor experimental cohort and schedule.xlsx"
-outfile <- "~/Desktop//WeeklyWeights.pdf"
+infile <- "~/Dropbox/Col4a5_FollowupStudies/1707 and 1714 Col4a5xRictor/Weights/1714 Col4a5xRictor experimental cohort and schedule.xlsx"
+outfile <- "~/Dropbox/Col4a5_FollowupStudies/1707 and 1714 Col4a5xRictor/Weights/WeeklyWeights.pdf"
+outlier_found <- FALSE
+
 # read file
 wweights <- read_excel(infile, sheet = "1714_weekly_weights")
 
@@ -21,16 +21,17 @@ wweights$Rictor_geno <- parse_factor(wweights$Rictor_geno, levels = unique(wweig
 wweights$Cat <- parse_factor(wweights$Cat, levels = c("A_Long", "B_Long", "C_Long", "D_Long","NA_Long")) # adding NA as temp place holder while genotyping is being sorted out
 
 # Identify outliers and drop from plot and calculations
-outliers <- data.frame(Animal_ID = as.character(c("A-0687-18")),
-                        Week = as.character(c("Wk12")),
-                      stringsAsFactors = FALSE)
+if(outlier_found){
+  outliers <- data.frame(Animal_ID = as.character(c("A-0687-18")), # list samples
+                          Week = as.character(c("Wk12")), # list weeks
+                        stringsAsFactors = FALSE)
 
-for (i in 1:nrow(outliers)){
-  value <- wweights %>% filter(Animal_ID %in% outliers$Animal_ID[i]) %>%
-                        select(outliers$Week[i])
-  wweights[which(wweights$Animal_ID == outliers$Animal_ID[i]), which(colnames(wweights) == outliers$Week[i])] <- NA
+  for (i in 1:nrow(outliers)){
+    value <- wweights %>% filter(Animal_ID %in% outliers$Animal_ID[i]) %>%
+                          select(outliers$Week[i])
+    wweights[which(wweights$Animal_ID == outliers$Animal_ID[i]), which(colnames(wweights) == outliers$Week[i])] <- NA
+  }
 }
-
 
 # gather by weeks and prepare for plotting
 wks <- colnames(wweights)[grep("Wk", colnames(wweights))]

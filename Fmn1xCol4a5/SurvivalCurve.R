@@ -7,9 +7,10 @@ library(lubridate)
 library(survminer)
 library(survival)
 library(ggsci)
+library(grid)
 options(tibble.width = Inf)
-infile <- "~/Desktop/Col4a5_FollowupStudies/1717 and 1718 Col4a5xFmn1/Weights/1718 Col4a5xFmn1 experimental cohort and schedule.xlsx"
-outfile <- "~/Desktop/Col4a5_FollowupStudies/1717 and 1718 Col4a5xFmn1/Weights/SurvivalCurve_1718.pdf"
+infile <- "~/Dropbox/Col4a5_FollowupStudies/1717 and 1718 Col4a5xFmn1/Weights/1718 Col4a5xFmn1 experimental cohort and schedule.xlsx"
+outfile <- "~/Dropbox/Col4a5_FollowupStudies/1717 and 1718 Col4a5xFmn1/Weights/1718_SurvivalCurve_"
 
 # read data and extract relevant columns
 surv <- read_excel(infile, sheet = "Euthanized_date")
@@ -44,36 +45,13 @@ for (i in 1:nrow(surv)){
 }
 
 # Fit model
-fit <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv) # all
+#fit <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv) # all
 fit_M <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv[surv$Sex == "M",]) # males only
 fit_F <- survfit(Surv(TodayWeeks, LifeStat) ~ Cat, data = surv[surv$Sex == "F",]) # females only
 
 # Visualize
-plot <- ggsurvplot(fit,
-  data = surv,
-  # Change legends: title & labels
-  legend.title = "Genetype",
-  legend.labs = c("Female:Col4a5–Fmn1^{WT}", "Female:Col4a5–Fmn1KO","Male:Col4a5–Fmn1WT", "Male:Col4a5–Fmn1KO"),
-  # Add medians survival
-  surv.median.line = "hv",
-  # Add risk table
-  risk.table = TRUE,
-  tables.theme = theme_cleantable(),
-  color = "strata",
-  palette = pal_aaas("default")(5),
-  pval = TRUE,
-  xlim = c(0:max(surv$TodayWeeks)),
-  break.time.by = 2,
-  title = "1718 Survival Curve",
-  subtitle = paste("Last Update:", Sys.Date(), "Oldest mouse is", max(surv$TodayWeeks), "wks old"),
-  font.title = 10,
-  font.subtitle = 10,
-  fontsize = 4,
-  ggtheme = theme_bw())
-
-# Visualize
-plotM <- ggsurvplot(fit_M,
-  data = surv,
+plotM <- surv %>% filter(Sex == "M") %>% ggsurvplot(fit_M,
+  data = .,
   # Change legends: title & labels
   legend.title = "Genetype",
   legend.labs = c("Col4a5–Fmn1WT", "Col4a5–Fmn1KO"),
@@ -85,17 +63,17 @@ plotM <- ggsurvplot(fit_M,
   color = "strata",
   palette = pal_aaas("default")(5),
   pval = TRUE,
-  xlim = c(0:max(surv$TodayWeeks)),
+  xlim = c(0:max(.$TodayWeeks)),
   break.time.by = 2,
   title = "1718 Survival Curve (Males)",
-  subtitle = paste("Last Update:", Sys.Date(), "Oldest mouse is", max(surv$TodayWeeks), "wks old"),
+  subtitle = paste("Last Update:", Sys.Date(), "Oldest mouse is", max(.$TodayWeeks), "wks old"),
   font.title = 10,
   font.subtitle = 10,
   fontsize = 4,
   ggtheme = theme_bw())
 
-plotF <- ggsurvplot(fit_F,
-  data = surv,
+plotF <- surv %>% filter(Sex == "F") %>% ggsurvplot(fit_F,
+  data = .,
   # Change legends: title & labels
   legend.title = "Genetype",
   legend.labs = c("Col4a5–Fmn1WT", "Col4a5–Fmn1KO"),
@@ -107,18 +85,20 @@ plotF <- ggsurvplot(fit_F,
   color = "strata",
   palette = pal_aaas("default")(5),
   pval = TRUE,
-  xlim = c(0:max(surv$TodayWeeks)),
+  xlim = c(0:max(.$TodayWeeks)),
   break.time.by = 2,
   title = "1718 Survival Curve (Females)",
-  subtitle = paste("Last Update:", Sys.Date(), "Oldest mouse is", max(surv$TodayWeeks), "wks old"),
+  subtitle = paste("Last Update:", Sys.Date(), "Oldest mouse is", max(.$TodayWeeks), "wks old"),
   font.title = 10,
   font.subtitle = 10,
   fontsize = 4,
   ggtheme = theme_bw())
 
 
+pdf(paste0(outfile,"_male.pdf"), width = 8, height = 8, onefile = FALSE) #force into single page to get ride of first blank page
+plotM
+dev.off()
 
-
-pdf(outfile, width = 8, height = 8, onefile = FALSE) #force into single page to get ride of first blank page
-plot
+pdf(paste0(outfile, "_female.pdf"), width = 8, height = 8, onefile = FALSE) #force into single page to get ride of first blank page
+plotF
 dev.off()
