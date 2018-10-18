@@ -22,8 +22,8 @@ surv <- surv[,colnames(surv)[1:13]] %>%
     Today = ymd(as.character(Sys.Date())),
     EndWeeks = as.numeric(round((as.numeric(EndDate - StartDate)/7)/ 0.5)* 0.5) + 6, # add 6 weeks as start of phenotyping
     TodayWeeks = as.numeric(round((as.numeric(Today - StartDate)/7)/ 0.5)* 0.5) + 6, # add 6 weeks as start of phenotyping
-    LifeStat = as.numeric(0)
-  ) # rounds weeks to the nearest half week
+    LifeStat = as.numeric(0)) %>% # rounds weeks to the nearest half week
+  filter(Cohort_ID != "?") # get rid of unknown cohort
 
 # some animals are not yet 6wks old so corece them to 0 weeks
 if(any(surv$TodayWeeks < 0)){
